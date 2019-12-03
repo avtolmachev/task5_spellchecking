@@ -47,7 +47,26 @@ int main(int argc, char* argv[]) {
 	return EXIT_SUCCESS;
 }
 
-void checkSpelling(ifstream& in, Dictionary& dict) {
+void transposingCheck(string word, Dictionary& dict);
+
+void removalCheck(string word, Dictionary& dict)
+{
+    string word_temp = word;
+    for (int i = 0; i < word.length(); i++)
+    {
+        word.erase(i, 1);
+        if (dict.search(word))
+            cout << " " << word << ";";
+        word = word_temp;
+    }
+}
+
+void replacementCheck(string word, Dictionary& dict);
+
+void insertingCheck(string word, Dictionary& dict);
+
+void checkSpelling(ifstream& in, Dictionary& dict)
+{
 
 	int line_number = 0;
 
@@ -64,7 +83,21 @@ void checkSpelling(ifstream& in, Dictionary& dict) {
 		string word;
 		while (ss >> word) 
         {
-            // TODO: Complete the spell check of each word
+		    lower(word);
+		    word = stripPunct(word);
+            if (dict.search(word))
+                continue;
+            else
+            {
+                cout << word << " is incorrect. Possible corrections: ";
+
+                transposingCheck(word, dict);
+                removalCheck(word, dict);
+                replacementCheck(word, dict);
+                insertingCheck(word, dict);
+
+                cout << "\n";
+            }
 		}
 	}
 }
@@ -90,4 +123,51 @@ string stripPunct(const string& s) {
     {
 		return s;
 	}
+}
+
+void transposingCheck(string word, Dictionary &dict) {
+    char temp;
+    string word_temp = word;
+
+    for (int i = 0; i < word.length() - 1; i++)
+    {
+        temp = word[i];
+        word[i] = word[i + 1];
+        word[i + 1] = temp;
+        if (dict.search(word))
+            cout << " " << word << ";";
+        word = word_temp;
+    }
+}
+
+void insertingCheck(string word, Dictionary &dict) {
+    string word_temp = word;
+
+    for (int i = 0; i < word.length() + 1; i++)
+    {
+        for (char j = 'a'; j <= 'z'; j++)
+        {
+            string str;
+            str += j;
+            word.insert(i, str);
+            if (dict.search(word))
+                cout << " " << word << ";";
+            word = word_temp;
+        }
+    }
+}
+
+void replacementCheck(string word, Dictionary &dict) {
+    string word_temp = word;
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        for (int j = 'a'; j <= 'z'; j++)
+        {
+            word[i] = char(j);
+            if (dict.search(word))
+                cout << " " << word << ";";
+            word = word_temp;
+        }
+    }
 }
