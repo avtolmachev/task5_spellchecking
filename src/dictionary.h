@@ -17,11 +17,19 @@ class hash_function
 {
 public:
 
-    unsigned int operator()( const string& s )  const {
-        
-        
-        // Complete definition
-        
+    unsigned int operator()( const string& s )  const
+    {
+        unsigned int hash = 0;
+        unsigned int test = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            hash = (hash << 4) + (unsigned char)(s[i]);
+
+            if ((test = hash & 0xf0000000) != 0) {
+                hash = ((hash ^ (test >> 24)) & (0xfffffff));
+            }
+        }
+        return hash;
     }
 };
 
@@ -35,7 +43,8 @@ public:
     }
 };
 
-class Dictionary: public HashSet<string, hash_function, equality> {
+class Dictionary: public HashSet<string, hash_function, equality>
+        {
 
     // Complete definition
 public:

@@ -11,11 +11,13 @@
 using namespace std;
 
 template<class key_type, class hash_func, class key_equal>
-class  HashSet {
+class  HashSet
+        {
 
 protected:
     // hashtable entries 
-    class Entry {
+    class Entry
+            {
         public:
         key_type key;
         bool used;
@@ -41,7 +43,8 @@ static const unsigned long prime_list[];
 
     HashSet(): entries(0), prime(0),ht(new vector<Entry>(prime_list[0])){};
           
-    virtual ~HashSet() { 
+    virtual ~HashSet()
+    {
 		delete ht;
 	}
 
